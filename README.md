@@ -46,9 +46,9 @@ versions of Python-based projects like Menpo.
 
 atomicmenpo is ideal for people who are completely new to Python and are
 interested to try out Menpo, perhaps for it's command line tools or
-benchmarking feature. It tries to replicate as close as we can the experience
-of downloading a traditional piece of software, running `make`, and having a
-bunch of 'executables' ready to play with.
+benchmarking feature. It replicates the experience of downloading a traditional
+piece of software, running `make`, and having a bunch of 'executables' ready 
+to play with.
 
 It's also useful for more advanced users as a convenient method to generate a
 clean install of the latest stable version of menpo that is not only unrelated
