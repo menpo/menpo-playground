@@ -11,7 +11,7 @@ folder.
 
 On Linux or OS X:
 
-1. Download the [latest installer](https://raw.githubusercontent.com/menpo/atomicmenpo/master/installmenpo.sh)
+1. Download the [latest installer](https://raw.githubusercontent.com/menpo/atomicmenpo/master/installmenpo)
 2. Place the file in a folder where you want to install Menpo
 3. Open a terminal, `cd` to your chosen directory, and run the script:
 
