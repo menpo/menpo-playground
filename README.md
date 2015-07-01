@@ -1,4 +1,4 @@
-# ATOMIC MENPO
+# [EXPERIMENTAL] ATOMIC MENPO
 
 ### What is atomicmenpo?
 atomicmenpo is a one-click installer for the latest stable version of The Menpo
