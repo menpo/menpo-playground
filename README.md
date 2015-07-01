@@ -112,7 +112,7 @@ use conda as normal and conda install menpo.
 Once you have been using Python a little you will realize that the structure of
 conda (or virtualenv) where you have multiple isolated environments that can be
 easily switched between is really valuable. You'll also want all those utilities
-to be on your path at all times, so you don't have to live our of one folder on
+to be on your path at all times, so you don't have to live out of one folder on
 your system like a hermit. Then you'll get to grips with installing development
 versions of packages so you can edit them to contribute back to the community.
 You'll discover git and it will transform the way you conduct your work or
