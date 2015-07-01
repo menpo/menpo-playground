@@ -1,4 +1,4 @@
-# [EXPERIMENTAL] ATOMIC MENPO
+# [EXPERIMENTAL] ATOMICMENPO
 
 ### What is atomicmenpo?
 atomicmenpo is a one-click installer for the latest stable version of The Menpo
@@ -44,7 +44,7 @@ versions of Python-based projects like Menpo.
 
 ### Who is atomicmenpo for?
 
-Atomicmenpo is ideal for people who are completely new to Python and are
+atomicmenpo is ideal for people who are completely new to Python and are
 interested to try out Menpo, perhaps for it's command line tools or
 benchmarking feature. It tries to replicate as close as we can the experience
 of downloading a traditional piece of software, running `make`, and having a
