@@ -140,7 +140,7 @@ def setup_miniconda(python_version, installation_path):
     cmds = [[conda_cmd, 'update', '-q', '--yes', 'conda'],
             [conda_cmd, 'install', '-c', 'menpo', '-q', '--yes', 
                         'menpo', 'menpodetect', 'menpofit', 'menpo3d']]
-    #execute_sequence(*cmds)
+    execute_sequence(*cmds)
     print("\nInstallation finished. See ./atomicmenpo/README.md for next steps.\n")
     print("To uninstall, simply delete the ./atomicmenpo folder.\n")
 
