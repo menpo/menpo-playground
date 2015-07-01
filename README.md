@@ -11,13 +11,13 @@ folder.
 
 On Linux or OS X:
 
-1. Download the [latest installer](https://raw.githubusercontent.com/menpo/atomicmenpo/master/installmenpo.py)
+1. Download the [latest installer](https://raw.githubusercontent.com/menpo/atomicmenpo/master/installmenpo.py) (right click, Save As)
 2. Place the file in a folder where you want to install Menpo
 3. Open a terminal, `cd` to your chosen directory, and run the script:
 
 ```sh
 > cd ./my_dir/
-> ./installmenpo
+> python installmenpo.py
 ```
 
 That's it. You'll have a clean isolated install of Menpo ready to use at
