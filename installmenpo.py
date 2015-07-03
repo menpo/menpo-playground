@@ -6,6 +6,9 @@ import platform as stdplatform
 import sys
 import uuid
 
+README_URL = 'https://raw.githubusercontent.com/menpo/atomicmenpo/master/INSTALLED_README.md'
+PACKAGES_TO_INSTALL = ['menpo', 'menpofit', 'menpodetect', 'menpo3d']
+PACKAGES_WITH_NOTEBOOKS = ['menpo', 'menpofit', 'menpo3d']
 
 def detect_arch():
     arch = stdplatform.architecture()[0]
@@ -24,19 +27,21 @@ def detect_arch():
 
 host_platform = stdplatform.system()
 host_arch = detect_arch()
-install_path = './atomicmenpo'
-abs_install_path = p.abspath(install_path)
+RELATIVE_INSTALL_PATH = './atomicmenpo'
+RELATIVE_NOTEBOOK_PATH = './menpo_notebooks'
+ABSOLUTE_INSTALL_PATH = p.abspath(RELATIVE_INSTALL_PATH)
+ABSOLUTE_NOTEBOOK_PATH = p.abspath(RELATIVE_NOTEBOOK_PATH)
 
 # define our commands
 if host_platform == 'Windows':
     script_dir_name = 'Scripts'
-    temp_installer_path = p.join(abs_install_path, '{}.exe'.format(uuid.uuid4()))
+    temp_installer_path = p.join(ABSOLUTE_INSTALL_PATH, '{}.exe'.format(uuid.uuid4()))
 else:
     script_dir_name = 'bin'
-    temp_installer_path = p.join(abs_install_path, '{}.sh'.format(uuid.uuid4()))
+    temp_installer_path = p.join(ABSOLUTE_INSTALL_PATH, '{}.sh'.format(uuid.uuid4()))
+
 
 miniconda_script_dir = lambda mc: p.join(mc, script_dir_name)
-
 conda = lambda mc: p.join(miniconda_script_dir(mc), 'conda')
 binstar = lambda mc: p.join(miniconda_script_dir(mc), 'binstar')
 python = lambda mc: p.join(miniconda_script_dir(mc), 'python')
@@ -113,8 +118,6 @@ def download_file(url, path_to_download):
     fp.close()
 
 
-# CONDACI CONVENIENCE FUNCTIONS
-
 def acquire_miniconda(url, path_to_download):
     print('1. Downloading miniconda')
     download_file(url, path_to_download)
@@ -138,25 +141,30 @@ def setup_miniconda(python_version, installation_path):
     conda_cmd = conda(installation_path)
     print("3. Installing menpo and it's dependencies (could take some time)")
     cmds = [[conda_cmd, 'update', '-q', '--yes', 'conda'],
-            [conda_cmd, 'install', '-c', 'menpo', '-q', '--yes', 
-                        'menpo', 'menpodetect', 'menpofit', 'menpo3d']]
+            [conda_cmd, 'install', '-c', 'menpo', '-q', '--yes',
+                        'menpo', 'menpodetect', 'menpofit', 'menpo3d'],
+            [conda_cmd, 'clean', '--tarballs', '--yes']]
     execute_sequence(*cmds)
-    print("\nInstallation finished. See ./atomicmenpo/README.md for next steps.\n")
-    print("To uninstall, simply delete the ./atomicmenpo folder.\n")
 
 
-def resolve_mc(mc):
-    if mc is not None:
-        return mc
-    else:
-        return default_miniconda_dir
+def download_extras(mc, path):
 
+    versions = {package: version_of_package(mc, package) for package in PACKAGES_TO_INSTALL}
+    print('   The following packages are installed:')
+    for package, v in versions.items():
+        print('    - {}: {}'.format(package, v))
+    print('')
+    print("4. Downloading notebooks")
+    # download the README
+    download_file(README_URL, p.join(path, 'README.md'))
 
-python = p.join(abs_install_path, 'miniconda', 'bin', 'python')
+    # download the notebooks
+    for package, v in versions.items():
+        download_file("https://github.com/menpo/{}/archive/v{}.tar.gz".format(package, v), './menpo_notebooks/{}.tar.gz'.format(package))
 
-
-def version_of_package(package):
-    return execute([python, '-c', 'import menpo; print(menpo.__version__)'])
+def version_of_package(mc, package):
+    return subprocess.check_output(
+        [python(mc), '-W', 'ignore', '-c', 'import {0}; print({0}.__version__)'.format(package)]).strip()
 
 
 if __name__ == "__main__":
@@ -169,18 +177,28 @@ if __name__ == "__main__":
     print(' ATOMICMENPO - A standalone installation of the Menpo Project')
     print(' ------------------------------------------------------------')
     print('')
-    print('This tool will install a self-contained version of menpo to {}'.format(install_path, abs_install_path))
+    print('This tool will install a self-contained version of menpo to {}'.format(RELATIVE_INSTALL_PATH, ABSOLUTE_INSTALL_PATH))
     print('')
     print('Installation will require about 2.5GB of free space, and will')
     print('take approximately 10 minutes on a fast connnection.')
     print('')
     raw_input('To continue, press enter. To abort, press Ctrl-C.')
     print('')
-    if p.isdir(abs_install_path):
-        print('Warning: {} already exists - installation aborted.'.format(install_path))
-        print('If you want to overite this install, delete the old'.format(install_path))
-        print('folder and rerun this installer.\n'.format(install_path))
-    else:
-        os.mkdir(install_path)
-        setup_miniconda('2.7', p.join(abs_install_path, 'miniconda'))
+    # if p.isdir(ABSOLUTE_INSTALL_PATH):
+    #     print('Warning: {} already exists - installation aborted.'.format(RELATIVE_INSTALL_PATH))
+    #     print('If you want to overite this install, delete the old')
+    #     print('folder and rerun this installer.\n')
+    #     exit(1)
+    # if p.isdir(ABSOLUTE_NOTEBOOK_PATH):
+    #     print('Warning: {} already exists - installation aborted.'.format(RELATIVE_NOTEBOOK_PATH))
+    #     print('If you want to overwrite this install, delete the old')
+    #     print('folder and rerun this installer.\n')
+    #     exit(1)
+    # os.mkdir(RELATIVE_INSTALL_PATH)
+    # os.mkdir(RELATIVE_NOTEBOOK_PATH)
+    mc = p.join(ABSOLUTE_INSTALL_PATH, 'miniconda')
+    # setup_miniconda('2.7', mc)
+    download_extras(mc, './atomicmenpo')
+    print("\nInstallation finished. See ./atomicmenpo/README.md for next steps.\n")
+    print("To uninstall, simply delete the ./atomicmenpo folder.\n")
 
