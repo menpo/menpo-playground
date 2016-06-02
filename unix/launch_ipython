@@ -1,0 +1,3 @@
+#!/bin/bash
+./src/bin/python ./src/bin/jupyter-notebook --notebook-dir=./notebooks
+
