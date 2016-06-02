@@ -8,12 +8,12 @@ set -e  # stop on errors
 rm ./menpotoolbox.7z || true
 
 # Make sure there is no current build dir and create it
-rm -r ./mtk_build_space || true
-mkdir ./mtk_build_space
+rm -r ./build || true
+mkdir ./build
 
 # Go into the temp build folder. Note that we do everything
 # in this context from here on out.
-cd ./mtk_build_space
+cd ./build
 
 # Make the directory which will be our final package
 mkdir menpotoolbox
@@ -44,7 +44,3 @@ find ./menpotoolbox/src -name __pycache__ -type d -exec rm -rf {} \; || true
 
 # Finally, zip the folder up real tight with 7zip
 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ../menpotoolbox.7z ./menpotoolbox
-
-# Go back out of the tmp dir...
-cd ..
-
