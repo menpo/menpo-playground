@@ -47,12 +47,15 @@ rm -r ./menpotoolbox/src/include/* ./menpotoolbox/src/pkgs/*
 # Prune out cached files
 find ./menpotoolbox/src -name __pycache__ -type d -exec rm -rf {} \; || true
 
+if [[ $OSTYPE == darwin* ]]
+then
+    # ditto (built in to OS X) cains ZIP:
+    ditto -ck --rsrc --sequesterRsrc --keepParent ./menpotoolbox ../menpotoolbox.zip
+else
+     # try both gz and .bz2 on linux
+    tar -jcvf ../menpotoolbox.tar.bz2 ./menpotoolbox
+    tar -zcvf ../menpotoolbox.tar.gz ./menpotoolbox
+fi
+
 # Finally, zip the folder up real tight with 7zip
 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ../menpotoolbox.7z ./menpotoolbox
-
-# Zip it
-zip -r ../menpotoolbox.zip ./menpotoolbox
-
-# And create a tar.gz/tar.bz2
-tar -zcvf ../menpotoolbox.tar.gz ./menpotoolbox
-tar -jcvf ../menpotoolbox.tar.bz2 ./menpotoolbox
