@@ -4,8 +4,8 @@ set -e  # stop on errors
 # Check we have 7z installed
 7z -h > /dev/null
 
-# Remove any existing artifact
-rm ./menpotoolbox.7z || true
+# Remove any existing artifacts
+rm ./menpotoolbox.7z ./menpotoolbox.tar.gz || true
 
 # Make sure there is no current build dir and create it
 rm -r ./build || true
@@ -44,3 +44,10 @@ find ./menpotoolbox/src -name __pycache__ -type d -exec rm -rf {} \; || true
 
 # Finally, zip the folder up real tight with 7zip
 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ../menpotoolbox.7z ./menpotoolbox
+
+# Zip it
+zip -r ../menpotoolbox.zip ./menpotoolbox
+
+# And create a tar.gz/tar.bz2
+tar -zcvf ../menpotoolbox.tar.gz ./menpotoolbox
+tar -jcvf ../menpotoolbox.tar.bz2 ./menpotoolbox
