@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e  # stop on errors
 
+MINICONDA_URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+if [[ $OSTYPE == darwin* ]]; then
+    MINICONDA_URL=https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+fi
+
 # Check we have 7z installed
 7z -h > /dev/null
 
@@ -27,11 +32,11 @@ cp -r menpo-notebooks-master/notebooks ./menpotoolbox/
 cp ../unix/* ./menpotoolbox/
 
 # Download the latest installer and make it runnable
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-chmod u+x Miniconda3-latest-Linux-x86_64.sh
+wget $MINICONDA_URL -O miniconda.sh
+chmod u+x miniconda.sh
 
 # Install Miniconda inside as the src dir...
-./Miniconda3-latest-Linux-x86_64.sh -b -p ./menpotoolbox/src
+./miniconda.sh -b -p ./menpotoolbox/src
 
 # ...and install the Menpo Project into it
 ./menpotoolbox/src/bin/conda install -y -c menpo menpoproject
