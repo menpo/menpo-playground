@@ -1,0 +1,5 @@
+bin/python
+lib/python3.5.*
+lib/python3.5m.*
+lib/python3.5
+lib/libpython3.5*

@@ -1,0 +1,35 @@
+include
+envs
+conda-meta
+pkgs
+share
+ssl
+
+python*
+bin/xml*
+bin/q*
+bin/Q*
+bin/h5*
+bin/Assistant-*
+bin/opencv*
+bin/ffserver
+bin/*-qt4*
+
+lib/cmake
+lib/qt4/*
+lib/python3.5/site-packages/matplotlib/mpl-data/sample-data/*
+
+
+Library/include
+Library/libboost_test_exec_monitor-vc140-mt-gd-1_59.lib
+
+# windows has a bunch of other random files
+Lib/test
+Doc
+Uninstall-Anaconda.exe
+Scripts/ffplay.exe
+
+# Universally get rid of cached files.
+**/__pycache__
+**/.DS_Store
+**/*.pdb
