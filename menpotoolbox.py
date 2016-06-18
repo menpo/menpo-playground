@@ -9,6 +9,9 @@ import time
 import subprocess
 import sys
 from urllib.request import urlopen
+import platform
+
+IS_WINDOWS = platform.system() == 'Windows'
 
 
 def copy_and_yield(fsrc, fdst, length=1024*1024):
@@ -296,12 +299,13 @@ FINAL_TOOLBOX_PATH = norm_path('./build/menpotoolbox')
 FINAL_SRC_DIR = FINAL_TOOLBOX_PATH / 'src'
 FINAL_BUNDLE_PATH = FINAL_SRC_DIR / 'bundle.tar.xz'
 MINICONDA_PATH = norm_path('./build/miniconda')
-
+MINICONDA_BIN_PATH = MINICONDA_PATH / ('Scripts' if IS_WINDOWS else 'bin')
+CONDA_PATH_STR = str(MINICONDA_BIN_PATH / 'conda')
 
 def install_deps():
-    subprocess.call(['./build/miniconda/bin/conda', 'install', '-y', 'nomkl'])
-    subprocess.call(['./build/miniconda/bin/conda', 'install', '-y', '-c', 'menpo', 'menpoproject'])
-    subprocess.call(['./build/miniconda/bin/conda', 'remove', '-y', '--force', '-q', 'opencv3', 'pandas', 'qt', 'pyqt'])
+    subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
+    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'menpoproject'])
+    subprocess.call([CONDA_PATH_STR, 'remove', '-y', '--force', '-q', 'opencv3', 'pandas', 'qt', 'pyqt'])
 
 
 def build():

@@ -5,7 +5,6 @@ pkgs
 share
 ssl
 
-python*
 bin/xml*
 bin/q*
 bin/Q*
@@ -17,14 +16,20 @@ bin/*-qt4*
 
 lib/cmake
 lib/qt4/*
+
+# We reach in and clear some static data out from packages where we know it's
+# Unneeded.
 lib/python3.5/site-packages/matplotlib/mpl-data/sample-data/*
-
-
-Library/include
-Library/libboost_test_exec_monitor-vc140-mt-gd-1_59.lib
+Lib/site-packages/matplotlib/mpl-data/sample-data/*
 
 # windows has a bunch of other random files
+Library/include
+Library/share
+Library/libboost_test_exec_monitor-vc140-mt-gd-1_59.lib
 Lib/test
+Tools
+man
+info
 Doc
 Uninstall-Anaconda.exe
 Scripts/ffplay.exe
