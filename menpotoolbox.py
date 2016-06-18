@@ -301,12 +301,15 @@ FINAL_BUNDLE_PATH = FINAL_SRC_DIR / 'bundle.tar.xz'
 MINICONDA_PATH = norm_path('./build/miniconda')
 MINICONDA_BIN_PATH = MINICONDA_PATH / ('Scripts' if IS_WINDOWS else 'bin')
 CONDA_PATH_STR = str(MINICONDA_BIN_PATH / 'conda')
+PYTHON_PATH_STR = str(MINICONDA_BIN_PATH / 'python')
 
 def install_deps():
     subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
     subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'menpoproject'])
+    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo/channel/master', '--force', '--no-update-deps', 'menpofit'])
     subprocess.call([CONDA_PATH_STR, 'remove', '-y', '--force', '-q', 'opencv3', 'pandas', 'qt', 'pyqt'])
-
+    # now call our warmup script to do any pre-processing (e.g. model download)
+    subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
 
 def build():
     print('building menpotoolbox (without bundle)...')

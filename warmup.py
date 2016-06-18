@@ -1,0 +1,2 @@
+from menpofit.aam import load_balanced_frontal_face_fitter
+load_balanced_frontal_face_fitter()
