@@ -1,1 +1,1 @@
-build\miniconda\python menpotoolbox.py bundle
+build\miniconda\python menpoplayground.py bundle

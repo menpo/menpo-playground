@@ -298,7 +298,7 @@ def load_timings(bundle_path):
     return timings
 
 
-FINAL_TOOLBOX_PATH = norm_path('./build/menpotoolbox')
+FINAL_TOOLBOX_PATH = norm_path('./build/menpo_playground')
 FINAL_SRC_DIR = FINAL_TOOLBOX_PATH / 'src'
 MINICONDA_PATH = norm_path('./build/miniconda')
 MINICONDA_BIN_PATH = MINICONDA_PATH / ('Scripts' if IS_WINDOWS else 'bin')
@@ -360,12 +360,12 @@ def build():
 
     # and finally save out the zip
     print('----- 3. EXPORT ARCHIVE -----')
-    print('  - Building menpotoolbox.zip...')
-    shutil.make_archive('menpotoolbox', 'zip', str(FINAL_TOOLBOX_PATH), '.')
+    print('  - Building menpo_playground.zip...')
+    shutil.make_archive('menpo_playground', 'zip', str(FINAL_TOOLBOX_PATH), '.')
     if not IS_WINDOWS:
-        print('  - Building menpotoolbox.tar.xz...')
+        print('  - Building menpo_playground.tar.xz...')
         # OS X Yosemite+ and Ubuntu? supports tar.xz out of the box.
-        shutil.make_archive('menpotoolbox', 'xztar', str(FINAL_TOOLBOX_PATH), '.')
+        shutil.make_archive('menpo_playground', 'xztar', str(FINAL_TOOLBOX_PATH), '.')
 
 
 def bundle():
@@ -415,17 +415,20 @@ def bundle():
     dump_timings(timings, bundle_path)
 
     # save this installer in so we can unpack...
-    print('  - Adding src/menpotoolbox.py and get_started to unpack...')
-    cp(norm_path(__file__), bundle_src_dir / 'menpotoolbox.py')
+    print('  - Adding src/menpo_playground.py and get_started to unpack...')
+    cp(norm_path(__file__), bundle_src_dir / 'menpo_playground.py')
+    bundle_content_dir = norm_path(__file__).parent / 'bundle'
     if IS_WINDOWS:
-        cp(norm_path('get_started.cmd'), bundle_toolbox_path / 'get_started.cmd')
+        cp(bundle_content_dir / 'get_started.cmd', bundle_toolbox_path / 'Get Started.cmd')
     else:
-        cp(norm_path('get_started.sh'), bundle_toolbox_path / 'get_started')
-    cp(norm_path('get started readme.md'), bundle_toolbox_path / 'get started readme.md')
+        cp(bundle_content_dir / 'get_started.sh', bundle_toolbox_path / 'get_started')
+
+    cp(bundle_content_dir / 'readme_{}.md'.format(PLATFORM_STR), 
+       bundle_toolbox_path / 'Get Started readme.md')
 
     # and finally save out the zip
-    print('  - Building menpotoolbox.zip...')
-    shutil.make_archive('menpotoolbox_bundle', 'zip', str(bundle_toolbox_path), '.')
+    print('  - Building menpo_playground.zip...')
+    shutil.make_archive('menpo_playground', 'zip', str(bundle_toolbox_path), '.')
 
 
 def install():

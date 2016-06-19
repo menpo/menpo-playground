@@ -15,4 +15,4 @@ wget $MINICONDA_URL -O ./build/miniconda.sh
 chmod u+x ./build/miniconda.sh
 ./build/miniconda.sh -b -p ./build/miniconda
 
-./build/miniconda/bin/python ./menpotoolbox.py build
+./build/miniconda/bin/python ./menpo_playground.py build
