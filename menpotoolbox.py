@@ -10,8 +10,10 @@ import subprocess
 import sys
 from urllib.request import urlopen
 import platform
+from zipfile import ZipFile
 
 IS_WINDOWS = platform.system() == 'Windows'
+PLATFORM_STR = 'win' if IS_WINDOWS else 'unix'
 
 
 def copy_and_yield(fsrc, fdst, length=1024*1024):
@@ -43,17 +45,7 @@ def download_file(url, destination, verbose=False):
 
         # Retrieve a generator that we can keep yielding from to download the
         # file in chunks.
-        copy_progress = copy_and_yield(req, fp, length=chunk_size_bytes)
-
-        if verbose:
-            # wrap the download object with print progress to log the status
-            n_bytes = int(req.headers['content-length'])
-            n_items = int(ceil((1.0 * n_bytes) / chunk_size_bytes))
-            prefix = 'Downloading {}'.format(bytes_str(n_bytes))
-            copy_progress = print_progress(copy_progress, n_items=n_items,
-                                           show_count=False, prefix=prefix)
-
-        for _ in copy_progress:
+        for _ in copy_and_yield(req, fp, length=chunk_size_bytes):
             pass
 
     req.close()
@@ -201,8 +193,7 @@ def _load_a_list(path):
 
 def load_list(path):
     list = _load_a_list(path)
-    platform = 'win' if IS_WINDOWS else 'unix'
-    platform_specific_list_path = Path(str(path) + '.' + platform)
+    platform_specific_list_path = Path(str(path) + '.' + PLATFORM_STR)
     if platform_specific_list_path.is_file():
         print('{} exists - loading and adding'.format(platform_specific_list_path))
         list = list + _load_a_list(platform_specific_list_path)
@@ -326,6 +317,13 @@ def install_deps():
     # now call our warmup script to do any pre-processing (e.g. model download)
     subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
 
+def install_notebooks():
+    print('  - Downloading and installing notebooks...')
+    # download_file('https://github.com/menpo/menpo-notebooks/archive/master.zip', norm_path('./build/notebooks.zip'))
+    with ZipFile('./build/notebooks.zip') as zip:
+        zip.extractall(path='./build/notebooks')
+    cp(Path('./build/notebooks/menpo-notebooks-master/notebooks'), FINAL_TOOLBOX_PATH / 'notebooks')
+
 def build():
     print('=========== BUILD ===========')
     print('----- 1. INSTALL MENPO -----')
@@ -333,7 +331,9 @@ def build():
 
     # Make sure our destination is clean.
     reset_dir(FINAL_TOOLBOX_PATH)
-    
+
+    install_notebooks()
+
     # There's a lot of unneeded content in the miniconda dir
     # - to keep things compact, strip it down and save it into
     # the final src dir
@@ -366,6 +366,8 @@ def bundle():
     reset_dir(timing_toolbox_path)
 
     tmp_src_dir = tmp_toolbox_path / 'src'
+
+    install_notebooks()
 
     # There's a lot of unneeded content in the miniconda dir
     # - to keep things compact, strip it down and save it into
