@@ -264,7 +264,11 @@ def unpack_with_progress(bundle_path, output_path, report_every=1, cleanup=False
             yield member
             progress += member_times[member.path]
             time_spent = time.time() - start
-            total_time = time_spent / progress
+            if progress != 0:
+                total_time = time_spent / progress
+            else:
+                # By default assume 1 minute to unpack
+                total_time = 60
             time_remaining = total_time - time_spent
             if time_spent - last_reported > report_every:
                 last_reported = time_spent
@@ -399,7 +403,7 @@ def bundle():
     # Compress down the rest of the toolbox with LZMA2.
     print('----- 4. LMZA COMPRESS FULL INSTALL -----')
     print('  - Building src/bundle.tar.xz...')
-    pack(FINAL_SRC_DIR, bundle_path)
+    pack(FINAL_TOOLBOX_PATH, bundle_path)
 
     # Unpack the archive and time it so we can offer a progress
     # indication on install as to how long it will be
@@ -413,7 +417,10 @@ def bundle():
     # save this installer in so we can unpack...
     print('  - Adding src/menpotoolbox.py and get_started to unpack...')
     cp(norm_path(__file__), bundle_src_dir / 'menpotoolbox.py')
-    cp(norm_path('get_started'), bundle_toolbox_path / 'get_started')
+    if IS_WINDOWS:
+        cp(norm_path('get_started.cmd'), bundle_toolbox_path / 'get_started.cmd')
+    else:
+        cp(norm_path('get_started.sh'), bundle_toolbox_path / 'get_started')
     cp(norm_path('get started readme.md'), bundle_toolbox_path / 'get started readme.md')
 
     # and finally save out the zip
@@ -422,10 +429,12 @@ def bundle():
 
 
 def install():
-    # install is only ever invoked from the toolkit dir - unpack the bundle right here...
-    unpack_with_progress(norm_path('./src/bundle.tar.xz'), norm_path('.'), cleanup=True)
+    # install is only ever invoked from src dir - so we can trivialy locate the bundle.
+    file_path = Path(__file__)
+    src_dir = file_path.parent
+    unpack_with_progress(src_dir / 'bundle.tar.xz', src_dir.parent, cleanup=True)
     # Finally, remove ourselves :)
-    Path(__file__).unlink()
+    file_path.unlink()
 
 
 if __name__ == '__main__':
