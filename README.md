@@ -7,7 +7,7 @@ the latest stable version of The Menpo Project. Download and unpack one
 zip file, and you immediately have access to:
 
 1. A full isolated Python installation containing the Menpo Project with all its dependencies ready to go
-2. A set of notebooks that you can run immediatly to see how to use Menpo
+2. A set of notebooks that you can run immediately to see how to use Menpo
 3. Two command line tools, `menpofit`, and `menpodetect`, that can be used to locate bounding boxes and landmarks in challenging in-the-wild facial images.
 
 There is no installation step, you just run executables in the downloaded folder.
@@ -17,7 +17,7 @@ To remove, simply delete the folder.
 
 Menpo Playground is ideal for people who are completely new to Python and are
 interested to try out Menpo, perhaps for it's command line tools and
-useful prebuilt facial models. It replicates the experience of downloading a 
+useful pre-built facial models. It replicates the experience of downloading a 
 traditional piece of software, running `make`, and having a bunch of 'executables' ready 
 to play with.
 
@@ -93,11 +93,11 @@ installation.
 
 ### Can I install other Python packages?
 
-Not at this time. The price we pay for making a reloacatable Python install is that
+Not at this time. The price we pay for making a relocatable Python install is that
 it's hard to edit the Python install once it's unpacked at an arbitrary location on
-your hard drive. We might revist this in the future and improve upon it, but for now
+your hard drive. We might revisit this in the future and improve upon it, but for now
 if you want to install custom software with Menpo we recommend following our proper
-conda insatllation instructions.
+conda installation instructions.
 
 ### Wait, I screwed something up trying to install other packages. How do I reset Menpo Playground?
 
