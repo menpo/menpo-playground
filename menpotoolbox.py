@@ -312,9 +312,11 @@ CONDA_PATH_STR = str(MINICONDA_BIN_PATH / 'conda')
 PYTHON_PATH_STR = str(MINICONDA_BIN_PATH / 'python')
 
 def install_deps():
-    if not IS_WINDOWS:
-        # Don't install MKL unless on windows (where we have no choice)
-        subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
+    # Ideally we would like to do this to keep the download small - but this is
+    # not possible as dlib currently is compiled into MKL.
+    # if not IS_WINDOWS:
+    #     # Don't install MKL unless on windows (where we have no choice)
+    #     subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
 
     subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'menpoproject', 'docopt'])
     # Install the development versions of CLI and fit (for now!)
@@ -325,29 +327,40 @@ def install_deps():
     subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
 
 def build():
-    print('building menpotoolbox (without bundle)...')
+    print('=========== BUILD ===========')
+    print('----- 1. INSTALL MENPO -----')
     install_deps()
-    # We aren't bundling, so go straight for the src dir
 
+    # Make sure our destination is clean.
+    reset_dir(FINAL_TOOLBOX_PATH)
+    
     # There's a lot of unneeded content in the miniconda dir
     # - to keep things compact, strip it down and save it into
     # the final src dir
+    print('----- 2. PRUNE INSTALLATION -----')
     copy_dir_with_wb_lists(MINICONDA_PATH, FINAL_SRC_DIR,
                            *load_wb_lists('white_and_blacklists/extrenuous'), 
                            overwrite=True)
 
     # and finally save out the zip
-    print('Saving out bundles..')
+    print('----- 3. EXPORT ARCHIVE -----')
+    print('  - Building menpotoolbox.zip...')
     shutil.make_archive('menpotoolbox', 'zip', str(FINAL_TOOLBOX_PATH), '.')
-    shutil.make_archive('menpotoolbox', 'xztar', str(FINAL_TOOLBOX_PATH), '.')
+    if not IS_WINDOWS:
+        print('  - Building menpotoolbox.tar.xz...')
+        # OS X Yosemite+ and Ubuntu? supports tar.xz out of the box.
+        shutil.make_archive('menpotoolbox', 'xztar', str(FINAL_TOOLBOX_PATH), '.')
 
 
 def bundle():
-    print('building menpotoolbox with self extraction...')
+    print('=========== BUNDLE ===========')
+    print('----- 1. INSTALL MENPO -----')
     install_deps()
+
     tmp_toolbox_path = norm_path('./build/tmp_menpotoolbox')
     timing_toolbox_path = norm_path('./build/tartime')
 
+    # We need a few dirs for bundling - make sure it's all clean.
     reset_dir(FINAL_TOOLBOX_PATH)
     reset_dir(tmp_toolbox_path)
     reset_dir(timing_toolbox_path)
@@ -357,6 +370,7 @@ def bundle():
     # There's a lot of unneeded content in the miniconda dir
     # - to keep things compact, strip it down and save it into
     # our temp dir.
+    print('----- 2. PRUNE INSTALLATION -----')
     copy_dir_with_wb_lists(MINICONDA_PATH, tmp_src_dir,
                            *load_wb_lists('white_and_blacklists/extrenuous'), 
                            overwrite=True)
@@ -364,27 +378,32 @@ def bundle():
     # We will compress the majority of this with LZMA2 - but we
     # just keep the base python install out to be able to unpack
     # after download.
+    print('----- 3. EXTRACT BOOTSTRAP INSTALL -----')
     extract_from_dir_with_wb_lists(tmp_src_dir, FINAL_SRC_DIR, 
                                    *load_wb_lists('white_and_blacklists/bootstrap'), 
                                    overwrite=True)
 
-
     # Compress down the rest of the toolbox with LZMA2.
+    print('----- 4. LMZA COMPRESS FULL INSTALL -----')
+    print('  - Building src/bundle.tar.xz...')
     pack(tmp_toolbox_path, FINAL_BUNDLE_PATH)
 
     # Unpack the archive and time it so we can offer a progress
     # indication on install as to how long it will be
+    print('  - Timing unpack of src/bundle.tar.xz...')
     timings = unpack_and_time(FINAL_BUNDLE_PATH, timing_toolbox_path)
 
     # and save the timings down.
+    print('  - Saving timings to src/timings.pkl.xz...')
     dump_timings(timings, FINAL_BUNDLE_PATH)
 
     # save this installer in so we can unpack...
+    print('  - Adding src/menpotoolbox.py and get_started to unpack...')
     cp(norm_path(__file__), FINAL_SRC_DIR / 'menpotoolbox.py')
     cp(norm_path('get_started'), FINAL_TOOLBOX_PATH / 'get_started')
 
     # and finally save out the zip
-    print('Saving out bundle..')
+    print('  - Building menpotoolbox.zip...')
     shutil.make_archive('menpotoolbox_bundle', 'zip', str(FINAL_TOOLBOX_PATH), '.')
 
 
