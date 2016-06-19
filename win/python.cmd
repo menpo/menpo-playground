@@ -1,1 +1,2 @@
-src\python
+@ECHO OFF
+src\python %*
