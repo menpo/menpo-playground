@@ -195,9 +195,18 @@ def extract_from_dir_with_wb_lists(src, tgt, w_list, b_list, overwrite=False):
     blacklist(tgt, b_list)
     
     
-def load_list(path):
+def _load_a_list(path):
     patterns = [p.strip() for p in path.read_text().split('\n')]
     return [p for p in patterns if p != '' and not p.startswith('#')]
+
+def load_list(path):
+    list = _load_a_list(path)
+    platform = 'win' if IS_WINDOWS else 'unix'
+    platform_specific_list_path = Path(str(path) + '.' + platform)
+    if platform_specific_list_path.is_file():
+        print('{} exists - loading and adding'.format(platform_specific_list_path))
+        list = list + _load_a_list(platform_specific_list_path)
+    return list
 
 
 def load_wb_lists(path):
@@ -210,7 +219,6 @@ def reset_dir(path):
     if path.exists():
         rm(path)
     path.mkdir()
-    
     
 
 def pack(src, bundle_path):
@@ -304,10 +312,15 @@ CONDA_PATH_STR = str(MINICONDA_BIN_PATH / 'conda')
 PYTHON_PATH_STR = str(MINICONDA_BIN_PATH / 'python')
 
 def install_deps():
-    subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
-    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'menpoproject'])
-    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo/channel/master', '--force', '--no-update-deps', 'menpofit'])
+    if not IS_WINDOWS:
+        # Don't install MKL unless on windows (where we have no choice)
+        subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
+
+    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'menpoproject', 'docopt'])
+    # Install the development versions of CLI and fit (for now!)
+    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo/channel/master', '--force', '--no-update-deps', 'menpofit', 'menpocli'])
     subprocess.call([CONDA_PATH_STR, 'remove', '-y', '--force', '-q', 'opencv3', 'pandas', 'qt', 'pyqt'])
+   
     # now call our warmup script to do any pre-processing (e.g. model download)
     subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
 

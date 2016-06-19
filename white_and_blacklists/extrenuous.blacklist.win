@@ -1,0 +1,17 @@
+Doc
+info
+
+Lib/test
+Lib/site-packages/matplotlib/mpl-data/sample-data/*
+
+Library/include
+Library/share
+Library/libboost_test_exec_monitor-vc140-mt-gd-1_59.lib
+
+man
+Menu
+
+Scripts/ffplay.exe
+
+Tools
+Uninstall-Anaconda.exe

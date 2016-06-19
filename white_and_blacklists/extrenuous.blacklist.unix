@@ -1,0 +1,11 @@
+bin/xml*
+bin/q*
+bin/Q*
+bin/h5*
+bin/Assistant-*
+bin/opencv*
+bin/ffserver
+bin/*-qt4*
+
+lib/cmake
+lib/python3.5/site-packages/matplotlib/mpl-data/sample-data/*
