@@ -382,7 +382,7 @@ def bundle():
                            overwrite=True)
 
     # We need a few dirs for bundling - make sure it's all clean.
-    bundle_toolbox_path = norm_path('./build/bundltoolbox')
+    bundle_toolbox_path = norm_path('./build/bundletoolbox')
     timing_toolbox_path = norm_path('./build/tartime')
     
     print('  - cleaning temp dirs...')
