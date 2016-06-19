@@ -8,4 +8,4 @@ New-Item "$PSScriptRoot\build" -type directory -force
 $wc.DownloadFile($MINICONDA_URL, "$PSScriptRoot\build\miniconda.exe")
 
 # Install Miniconda inside as the src dir...
-build\miniconda.exe /S /AddToPath=0 /NoRegistry=1 /D="$PSScriptRoot\build\miniconda" 
+build\miniconda.exe /S /AddToPath=0 /NoRegistry=1 /D="$PSScriptRoot\build\miniconda" | Out-Null
