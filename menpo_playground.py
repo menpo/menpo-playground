@@ -320,11 +320,10 @@ def unpack_and_time(bundle_path, output_path):
     
     return { p: time / total_time for p, time in times.items() }
 
-
-def unpack_with_progress(bundle_path, output_path, report_every=0.5, cleanup=False):
+def unpack_with_progress(bundle_path, output_path, report_every=0.1, cleanup=False):
     
     member_times = load_timings(bundle_path)
-    
+    bar_length = 50
     def report_progress(members):
         
         progress = 0
@@ -343,12 +342,15 @@ def unpack_with_progress(bundle_path, output_path, report_every=0.5, cleanup=Fal
             time_remaining = total_time - time_spent
             if time_spent - last_reported > report_every:
                 last_reported = time_spent
-                progress_bar = progress_bar_str(progress)
-                print_dynamic('{} - {:.0f} seconds remaining'.format(progress_bar, time_remaining))
+                progress_bar = progress_bar_str(progress, bar_length=bar_length)
+                print_dynamic('  {} - {:.0f} seconds to go'.format(progress_bar, time_remaining))
             
     with tarfile.open(str(bundle_path), "r:xz") as tar:
         tar.extractall(str(output_path), members=report_progress(tar))
-    
+
+    print_dynamic('  {} - finished.      '.format(
+        progress_bar_str(1, bar_length=bar_length)))
+    print('')
     if cleanup:
         rm(bundle_path)
         rm(timings_path_for_bundle(bundle_path)) 
@@ -503,13 +505,35 @@ def bundle():
     shutil.make_archive('menpo_playground', 'zip', str(bundle_toolbox_path), '.')
 
 
+UNBUNDLE_START_STRING = '''
+
+                         Welcome to Menpo Playground!
+                         ----------------------------
+
+  We just need to do some housekeeping and then you will be good to go. 
+ 
+  Nothing outside this folder will be touched.
+'''
+
+UNBUNDLE_FINISH_STRING = '''
+  All done!
+
+  Check out README.md to see how to use this Menpo Playground.
+
+  Have fun!
+
+'''
+
+
 def install():
+    print(UNBUNDLE_START_STRING)
     # install is only ever invoked from src dir - so we can trivialy locate the bundle.
     file_path = Path(__file__)
     src_dir = file_path.parent
     unpack_with_progress(src_dir / 'bundle.tar.xz', src_dir.parent, cleanup=True)
     # Finally, remove ourselves :)
     file_path.unlink()
+    print(UNBUNDLE_FINISH_STRING)
 
 
 if __name__ == '__main__':
