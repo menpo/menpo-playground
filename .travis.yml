@@ -1,0 +1,18 @@
+sudo: false
+
+git:
+  depth: 200
+
+script:
+- ./build.sh
+
+after_success:
+- ls -ahl
+
+notifications:
+  slack:
+    rooms:
+      - menpo:19gyWImMkOfCj0iDAgTbDlDA
+    on_success: :change
+    on_failure: :change
+  email: false
