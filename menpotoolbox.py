@@ -324,15 +324,29 @@ def install_notebooks():
         zip.extractall(path='./build/notebooks')
     cp(Path('./build/notebooks/menpo-notebooks-master/notebooks'), FINAL_TOOLBOX_PATH / 'notebooks')
 
-def build():
-    print('=========== BUILD ===========')
-    print('----- 1. INSTALL MENPO -----')
-    install_deps()
 
+def install_root_content():
+    print('  - Installing root content...')
+    whitelist(Path('root'), FINAL_TOOLBOX_PATH, ['*'], rm_dir=False)
+    whitelist(Path(PLATFORM_STR), FINAL_TOOLBOX_PATH, ['*'], rm_dir=False)
+
+
+def deps_notebooks_root_content():
+    print('  - clearing final build dir...')
     # Make sure our destination is clean.
     reset_dir(FINAL_TOOLBOX_PATH)
-
+    print('  - installing deps...')
+    install_deps()
+    print('  - installing notebooks...')
     install_notebooks()
+    print('  - installing root content...')
+    install_root_content()
+
+
+def build():
+    print('=========== BUILD ===========')
+    print('----- 1. INSTALL CONTENT -----')
+    deps_notebooks_root_content()
 
     # There's a lot of unneeded content in the miniconda dir
     # - to keep things compact, strip it down and save it into
@@ -354,34 +368,31 @@ def build():
 
 def bundle():
     print('=========== BUNDLE ===========')
-    print('----- 1. INSTALL MENPO -----')
-    install_deps()
+    print('----- 1. INSTALL CONTENT -----')
+    deps_notebooks_root_content()
+
+    # There's a lot of unneeded content in the miniconda dir
+    # - to keep things compact, strip it down and save it into
+    # our temp dir.
+    
+    print('----- 2. PRUNE INSTALLATION -----')
+    reset_dir(tmp_src_dir)
+    copy_dir_with_wb_lists(MINICONDA_PATH, tmp_src_dir,
+                           *load_wb_lists('white_and_blacklists/extrenuous'), 
+                           overwrite=True)
 
     tmp_toolbox_path = norm_path('./build/tmp_menpotoolbox')
     timing_toolbox_path = norm_path('./build/tartime')
 
     # We need a few dirs for bundling - make sure it's all clean.
-    reset_dir(FINAL_TOOLBOX_PATH)
     reset_dir(tmp_toolbox_path)
     reset_dir(timing_toolbox_path)
-
-    tmp_src_dir = tmp_toolbox_path / 'src'
-
-    install_notebooks()
-
-    # There's a lot of unneeded content in the miniconda dir
-    # - to keep things compact, strip it down and save it into
-    # our temp dir.
-    print('----- 2. PRUNE INSTALLATION -----')
-    copy_dir_with_wb_lists(MINICONDA_PATH, tmp_src_dir,
-                           *load_wb_lists('white_and_blacklists/extrenuous'), 
-                           overwrite=True)
 
     # We will compress the majority of this with LZMA2 - but we
     # just keep the base python install out to be able to unpack
     # after download.
     print('----- 3. EXTRACT BOOTSTRAP INSTALL -----')
-    extract_from_dir_with_wb_lists(tmp_src_dir, FINAL_SRC_DIR, 
+    extract_from_dir_with_wb_lists(tmp_toolbox_path / 'src', FINAL_SRC_DIR, 
                                    *load_wb_lists('white_and_blacklists/bootstrap'), 
                                    overwrite=True)
 
@@ -403,6 +414,7 @@ def bundle():
     print('  - Adding src/menpotoolbox.py and get_started to unpack...')
     cp(norm_path(__file__), FINAL_SRC_DIR / 'menpotoolbox.py')
     cp(norm_path('get_started'), FINAL_TOOLBOX_PATH / 'get_started')
+    cp(norm_path('get started readme.md'), FINAL_TOOLBOX_PATH / 'get started readme.md')
 
     # and finally save out the zip
     print('  - Building menpotoolbox.zip...')
