@@ -1,1 +1,3 @@
+powershell -nologo -executionpolicy bypass -file .\miniconda_setup.ps1
+ECHO Miniconda installed - preparing bundle...
 build\miniconda\python menpo_playground.py bundle
