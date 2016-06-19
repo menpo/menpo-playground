@@ -303,7 +303,7 @@ FINAL_SRC_DIR = FINAL_TOOLBOX_PATH / 'src'
 MINICONDA_PATH = norm_path('./build/miniconda')
 MINICONDA_BIN_PATH = MINICONDA_PATH / ('Scripts' if IS_WINDOWS else 'bin')
 CONDA_PATH_STR = str(MINICONDA_BIN_PATH / 'conda')
-PYTHON_PATH_STR = str(MINICONDA_BIN_PATH / 'python')
+PYTHON_PATH_STR =  str(MINICONDA_PATH / 'python') if IS_WINDOWS else str(MINICONDA_BIN_PATH / 'python')
 
 def install_deps():
     # Ideally we would like to do this to keep the download small - but this is
