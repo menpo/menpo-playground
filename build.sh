@@ -16,13 +16,3 @@ chmod u+x ./build/miniconda.sh
 ./build/miniconda.sh -b -p ./build/miniconda
 
 ./build/miniconda/bin/python ./menpotoolbox.py build
-# run this to re-enable bundle builds (maybe for windows?)
-# ./build/miniconda/bin/python ./menpotoolbox.py bundle
-
-# Download the latest notebooks and add them to the toolbox
-# wget https://github.com/menpo/menpo-notebooks/archive/master.zip
-# unzip master.zip
-# cp -r menpo-notebooks-master/notebooks ./menpotoolbox/
-
-# Add in our local scripts too (from the dir above)
-# cp ../unix/* ./menpotoolbox/

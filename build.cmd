@@ -1,1 +1,1 @@
-build\miniconda\Scripts\python menpotoolbox.py build
+build\miniconda\python menpotoolbox.py bundle
