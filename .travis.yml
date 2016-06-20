@@ -4,8 +4,7 @@ git:
   depth: 200
 
 script:
-#- ./build.sh
-- ls
+- ./build.sh
 
 after_success:
 - ls -ahl
@@ -14,7 +13,6 @@ after_success:
 - rm .ssh/id_rsa.enc
 - cp -r .ssh ~/
 - chmod 600 ~/.ssh/id_rsa
-- echo hellp world > menpo_playground.tar.xz 
 - scp menpo_playground.tar.xz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
 notifications:
@@ -24,3 +22,4 @@ notifications:
     on_success: :change
     on_failure: :change
   email: false
+
