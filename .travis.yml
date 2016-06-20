@@ -10,7 +10,7 @@ script:
 after_success:
 - ls -ahl
 # Decrypt the private key from the travis env variable and copy into ~/.ssh
-- openssl rsa -in .ssh/id_rsa.enc -out .ssh/id_rsa -passin env:DEPLOY_KEYPASS
+- openssl rsa -in .ssh/id_rsa.enc -out .ssh/id_rsa -passin env:$DEPLOY_KEYPASS
 - rm .ssh/id_rsa.enc
 - cp -r .ssh ~/
 - chmod 600 ~/.ssh/id_rsa
