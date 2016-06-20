@@ -9,8 +9,9 @@ script:
 
 after_success:
 - ls -ahl
+- cp -r .ssh ~/
 # should fail, as no password to unlock key
-- scp -i ./id_rsa menpo_playground.tar.xz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- scp menpo_playground.tar.xz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
 notifications:
   slack:
