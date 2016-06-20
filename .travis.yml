@@ -10,6 +10,7 @@ script:
 after_success:
 - ls -ahl
 - cp -r .ssh ~/
+- chmod 600 ~/.ssh/id_rsa
 # should fail, as no password to unlock key
 - scp menpo_playground.tar.xz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
