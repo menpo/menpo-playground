@@ -9,9 +9,12 @@ script:
 
 after_success:
 - ls -ahl
+# Decrypt the private key from the travis env variable and copy into ~/.ssh
+- openssl rsa -in .ssh/id_rsa.enc -out .ssh/id_rsa -passin env:DEPLOY_KEYPASS
+- rm .ssh/id_rsa.enc
 - cp -r .ssh ~/
 - chmod 600 ~/.ssh/id_rsa
-# should fail, as no password to unlock key
+- echo hellp world > menpo_playground.tar.xz 
 - scp menpo_playground.tar.xz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
 notifications:
