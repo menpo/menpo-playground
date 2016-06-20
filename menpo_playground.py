@@ -386,10 +386,10 @@ def install_deps():
     #     # Don't install MKL unless on windows (where we have no choice)
     #     subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
 
-    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'menpoproject', 'docopt'])
+    subprocess.call([CONDA_PATH_STR, 'install', '-q', '-y', '-c', 'menpo', 'menpoproject', 'docopt'])
     # Install the development versions of CLI and fit (for now!)
-    subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo/channel/master', '--force', '--no-update-deps', 'menpofit', 'menpocli'])
-    subprocess.call([CONDA_PATH_STR, 'remove', '-y', '--force', '-q', 'opencv3', 'pandas', 'qt', 'pyqt'])
+    subprocess.call([CONDA_PATH_STR, 'install', '-q', '-y', '-c', 'menpo/channel/master', '--force', '--no-update-deps', 'menpofit', 'menpocli'])
+    subprocess.call([CONDA_PATH_STR, 'remove',  '-q', '-y', '--force',  'opencv3', 'pandas', 'qt', 'pyqt'])
    
     # now call our warmup script to do any pre-processing (e.g. model download)
     subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
@@ -408,9 +408,10 @@ def install_root_content():
 
 
 def deps_notebooks_root_content():
-    print('  - clearing final build dir...')
     # Make sure our destination is clean.
+    print('  - clearing final build dir...')
     reset_dir(FINAL_TOOLBOX_PATH)
+
     print('  - installing deps...')
     install_deps()
     print('  - installing notebooks...')
@@ -434,10 +435,12 @@ def build():
 
     # and finally save out the zip
     print('----- 3. EXPORT ARCHIVE -----')
-    print('  - Building menpo_playground.zip...')
-    shutil.make_archive('menpo_playground', 'zip', str(FINAL_TOOLBOX_PATH), '.')
-    if not IS_WINDOWS:
-        print('  - Building menpo_playground.tar.xz...')
+    if IS_WINDOWS:
+        print('  - On Windows: building menpo_playground.zip...')
+        print('    (Are you sure you want to build and not bundle on Windows? This will be a large .zip...)')
+        shutil.make_archive('menpo_playground', 'zip', str(FINAL_TOOLBOX_PATH), '.')
+    else:
+        print('  - On Mac/Linux: building menpo_playground.tar.xz...')
         # OS X Yosemite+ and Ubuntu? supports tar.xz out of the box.
         shutil.make_archive('menpo_playground', 'xztar', str(FINAL_TOOLBOX_PATH), '.')
 

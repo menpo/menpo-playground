@@ -16,3 +16,8 @@ chmod u+x ./build/miniconda.sh
 ./build/miniconda.sh -b -p ./build/miniconda
 
 ./build/miniconda/bin/python ./menpo_playground.py build
+if [ "$(uname)" == "Darwin" ]; then
+    # macOS < 10.10 doesn't support tar.xz out the box - 
+    # so make a bundled build as well
+    ./build/miniconda/bin/python ./menpo_playground.py bundle
+fi
