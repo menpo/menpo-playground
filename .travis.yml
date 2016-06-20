@@ -3,11 +3,18 @@ sudo: false
 git:
   depth: 200
 
+addons:
+    apt:
+        packages:
+            - sshpass
+
 script:
 - ./build.sh
 
 after_success:
 - ls -ahl
+- export SSHPASS=$DEPLOY_PASS
+- sshpass -e scp menpo_playground.tar.xz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
 notifications:
   slack:
