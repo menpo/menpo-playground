@@ -399,7 +399,7 @@ def install_notebooks():
     download_file('https://github.com/menpo/menpo-notebooks/archive/master.zip', norm_path('./build/notebooks.zip'))
     with ZipFile('./build/notebooks.zip') as zip:
         zip.extractall(path='./build/notebooks')
-    cp(Path('./build/notebooks/menpo-notebooks-master/notebooks'), FINAL_TOOLBOX_PATH / 'notebooks')
+    cp(Path('./build/notebooks/menpo-notebooks-master/'), FINAL_TOOLBOX_PATH / 'notebooks')
 
 
 def install_root_content():
