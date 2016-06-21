@@ -34,15 +34,14 @@ You can access this Python installation in two ways. Firstly, you can run `pytho
 ```
 > ./python
 ```
- This will invoke the Python interpreter shipped with this Playground in an interactive [REPL](https://en.wikipedia.org/wiki/Read–eval–print_loop) mode, and you'll see something like this:
- ```
+This will invoke the Python interpreter shipped with this Playground in an interactive [REPL](https://en.wikipedia.org/wiki/Read–eval–print_loop) mode, and you'll see something like this:
+```
 Python 3.5.1 |Continuum Analytics, Inc.| (default, Dec  7 2015, 11:24:55) 
 [GCC 4.2.1 (Apple Inc. build 5577)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 
- ```
- If you are new to Python, try executing the following commands, hitting enter after each one:
-
+```
+If you are new to Python, try executing the following commands, hitting enter after each one:
 ```py
 >>> print('hello from python!')
 >>> x = 2
@@ -70,7 +69,7 @@ Example IPython Notebooks
 
 Scripts are great for larger structured programs or for tasks that you want to leave running for a long time, but for exploratory research work we can do a lot better.
 
-**IPython Notebooks** are an envolved version of the basic `python` interface we saw earlier, but instead of running in a terminal they run in the browser.
+**IPython Notebooks** are an evolved version of the basic `python` interface we saw earlier, but instead of running in a terminal they run in the browser.
 
 This folder includes a set of Notebooks that explain how to use much of the Menpo Project. The best way to understand Notebooks is to just start playing with them. To do so, run:
 ```
@@ -78,4 +77,4 @@ This folder includes a set of Notebooks that explain how to use much of the Menp
 ```
 Your browser should open up to a file browser GUI. If it doesn't, try going to http://localhost:8080 manually.
 
-Go through the folders and launch the notebooks. You can browse the already run content, but the documents are also fully interactive - try executing the cells yourself by pressing `shift` + `enter`. Now edit some of the content of a cell and re-run it with `shift` + `enter` again. Notice how you can quickly iterate between typing code and running it - this is the beauty of the Notebook interface.
+Go through the folders and launch the notebooks. You can browse the already run content, but the documents are also fully interactive - try executing the cells yourself by pressing `shift` + `enter`. Now edit the content of a cell and re-run it with `shift` + `enter` again. Notice how you can quickly iterate between typing code and running it - this is the beauty of the Notebook interface.
