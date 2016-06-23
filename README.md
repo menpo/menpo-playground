@@ -104,3 +104,13 @@ Get Started readme.md
 accurate ETA
 4. After extraction you are left in the exact same state as a 
 **static install** (the get started files are swept away automatically).
+
+Editing the PDFs in the root dir
+--------------------------------
+
+We ship PDF documentation in the playgrounds. These are generated using this service:
+
+http://www.markdowntopdf.com
+
+The source files are kept in `src/`. This is a manual process - edit the markdown in `src/`, run the changed markdown through the webservice, store the result in `./root` and commit.
+
