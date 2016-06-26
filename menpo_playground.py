@@ -386,10 +386,8 @@ def install_deps():
     #     # Don't install MKL unless on windows (where we have no choice)
     #     subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
 
-    subprocess.call([CONDA_PATH_STR, 'install', '-q', '-y', '-c', 'menpo', 'menpoproject', 'docopt'])
-    # Install the development versions of CLI and fit (for now!)
-    subprocess.call([CONDA_PATH_STR, 'install', '-q', '-y', '-c', 'menpo/channel/master', '--force', '--no-update-deps', 'menpofit', 'menpocli'])
-    subprocess.call([CONDA_PATH_STR, 'remove',  '-q', '-y', '--force',  'opencv3', 'pandas', 'qt', 'pyqt'])
+    subprocess.call([CONDA_PATH_STR, 'install', '-q', '-y', '-c', 'menpo', 'menpoproject'])
+    subprocess.call([CONDA_PATH_STR, 'remove',  '-q', '-y', '--force',  'pandas', 'qt', 'pyqt'])
    
     # now call our warmup script to do any pre-processing (e.g. model download)
     subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
