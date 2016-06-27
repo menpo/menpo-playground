@@ -10,8 +10,8 @@ This directory contains:
 A guide to to use each of the above follows.
 All of the contents of this directory are **command line tools**, and you will need to open a terminal in order to run them.
 
-Facial landmark localizaton
----------------------------
+Facial landmark localization
+----------------------------
 
 This Playground includes pre-trained models for performing face detection (thanks to `dlib`) and facial landmark localization. These are exposed as simple command line tools, so you don't even need to know Python to use them.
 
@@ -19,7 +19,7 @@ To detect 68 landmarks on faces for a set of images in `~/my_images/`, run:
 ```
 > ./menpofit ~/my_images
 ```
-The annotions will be stored in simple `.pts` files next to each image. If more than one face is found, a number will be appended to the file stem to differentiate them. You can open these files in any text editor to extract the data.
+The annotations will be stored in simple `.pts` files next to each image. If more than one face is found, a number will be appended to the file stem to differentiate them. You can open these files in any text editor to extract the data.
 
 Detecting bounding boxes alone is very similar (with the same output style), just run:
 ```
@@ -28,7 +28,7 @@ Detecting bounding boxes alone is very similar (with the same output style), jus
 
 Isolated Python installation
 ----------------------------
-Inside the `./src` directory is a full installation of Python along with all the compex software needed to run the Menpo Project.
+Inside the `./src` directory is a full installation of Python along with all the complex software needed to run the Menpo Project.
 
 You can access this Python installation in two ways. Firstly, you can run `python` command in the root of this directory as follows:
 ```
@@ -62,7 +62,7 @@ Now do an Image search for an interesting picture and download it to `~/Download
 ```
 > python ./image_info.py
 ```
-You should see some infomation about your downloaded image printed.
+You should see some information about your downloaded image printed.
 
 Example IPython Notebooks
 -------------------------

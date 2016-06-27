@@ -28,7 +28,7 @@ clean install of the latest stable version of menpo that is not only unrelated
 to the system Python, but even unrelated to any existing conda installation.
 Menpo Playground essentially runs the same bootstrapping script we use when
 performing Continuous Integration (CI) testing, so if you are worried you have
-in any way borked your existing menpo installation, it can be convenient to
+in any way broken your existing menpo installation, it can be convenient to
 download Menpo Playground to get a clean slate to test something out in.
 
 
@@ -61,7 +61,7 @@ If you are already experienced with Python then feel free to `conda install
 -c menpo menpoproject` and be glad that we have built all our binary dependencies so everything
 just works on Linux Windows and OS X. If you really want to `pip install menpo`
 you can, but you'll have a real fight on your hands to get all our binary
-dependencies intalled. (Seriously, don't fight it, just use conda).
+dependencies installed. (Seriously, don't fight it, just use conda).
 
 Our project unfortunately lies at the interaction of having very
 challenging dependencies to install (hence our insistence on conda) and
