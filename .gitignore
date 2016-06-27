@@ -5,3 +5,4 @@ __pycache__
 .nonadmin
 *.zip
 *.tar.xz
+.DS_Store
