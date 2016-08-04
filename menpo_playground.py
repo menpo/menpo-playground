@@ -387,7 +387,7 @@ def install_deps():
     #     subprocess.call([CONDA_PATH_STR, 'install', '-y', 'nomkl'])
 
     subprocess.call([CONDA_PATH_STR, 'install', '-q', '-y', '-c', 'menpo', 'menpoproject'])
-    subprocess.call([CONDA_PATH_STR, 'remove',  '-q', '-y', '--force',  'pandas', 'qt', 'pyqt'])
+    # subprocess.call([CONDA_PATH_STR, 'remove',  '-q', '-y', '--force',  'pandas', 'qt', 'pyqt'])
    
     # now call our warmup script to do any pre-processing (e.g. model download)
     subprocess.call([PYTHON_PATH_STR, 'warmup.py'])
