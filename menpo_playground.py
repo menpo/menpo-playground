@@ -1,3 +1,4 @@
+import contextlib
 from functools import partial
 import lzma
 import os
@@ -14,6 +15,16 @@ from zipfile import ZipFile
 
 IS_WINDOWS = platform.system() == 'Windows'
 PLATFORM_STR = 'win' if IS_WINDOWS else 'unix'
+
+
+@contextlib.contextmanager
+def tmp_chdir(new_dir):
+    cur_dir = os.getcwd()
+    try:
+        os.chdir(str(new_dir))
+        yield
+    finally:
+        os.chdir(cur_dir)
 
 
 def progress_bar_str(percentage, bar_length=20, bar_marker='=', show_bar=True):
@@ -371,10 +382,15 @@ def load_timings(bundle_path):
         
     return timings
 
+PROJECT_DIR = norm_path('.')
+BUILD_DIR = PROJECT_DIR / 'build'
+PLAYGROUND_NAME = 'menpo_playground'
+FINAL_ARCHIVE_PATH = PROJECT_DIR / PLAYGROUND_NAME
 
-FINAL_TOOLBOX_PATH = norm_path('./build/menpo_playground')
+FINAL_TOOLBOX_PATH = BUILD_DIR / PLAYGROUND_NAME
 FINAL_SRC_DIR = FINAL_TOOLBOX_PATH / 'src'
-MINICONDA_PATH = norm_path('./build/miniconda')
+
+MINICONDA_PATH = BUILD_DIR / 'miniconda'
 MINICONDA_BIN_PATH = MINICONDA_PATH / ('Scripts' if IS_WINDOWS else 'bin')
 CONDA_PATH_STR = str(MINICONDA_BIN_PATH / 'conda')
 PYTHON_PATH_STR =  str(MINICONDA_PATH / 'python') if IS_WINDOWS else str(MINICONDA_BIN_PATH / 'python')
@@ -434,13 +450,17 @@ def build():
     # and finally save out the zip
     print('----- 3. EXPORT ARCHIVE -----')
     if IS_WINDOWS:
-        print('  - On Windows: building menpo_playground.zip...')
+        print('  - On Windows: building {}.zip...'.format(PLAYGROUND_NAME))
         print('    (Are you sure you want to build and not bundle on Windows? This will be a large .zip...)')
-        shutil.make_archive('menpo_playground', 'zip', str(FINAL_TOOLBOX_PATH), '.')
+        with tmp_chdir(BUILD_DIR):
+            shutil.make_archive(str(FINAL_ARCHIVE_PATH), 'zip', 
+                                root_dir='./', base_dir=PLAYGROUND_NAME)
     else:
-        print('  - On Mac/Linux: building menpo_playground.tar.xz...')
+        print('  - On Mac/Linux: building {}.tar.xz...'.format(PLAYGROUND_NAME))
         # OS X Yosemite+ and Ubuntu? supports tar.xz out of the box.
-        shutil.make_archive('menpo_playground', 'xztar', str(FINAL_TOOLBOX_PATH), '.')
+        with tmp_chdir(BUILD_DIR):
+            shutil.make_archive(str(FINAL_ARCHIVE_PATH), 'xztar', 
+                                root_dir='./', base_dir=PLAYGROUND_NAME)
 
 
 def bundle():
@@ -490,8 +510,8 @@ def bundle():
     dump_timings(timings, bundle_path)
 
     # save this installer in so we can unpack...
-    print('  - Adding src/menpo_playground.py and get_started to unpack...')
-    cp(norm_path(__file__), bundle_src_dir / 'menpo_playground.py')
+    print('  - Adding src/{}.py and get_started to unpack...'.format(PLAYGROUND_NAME))
+    cp(norm_path(__file__), bundle_src_dir / '{}.py'.format(PLAYGROUND_NAME))
     bundle_content_dir = norm_path(__file__).parent / 'bundle'
     if IS_WINDOWS:
         cp(bundle_content_dir / 'get_started.cmd', bundle_toolbox_path / 'Get Started.cmd')
@@ -502,8 +522,8 @@ def bundle():
        bundle_toolbox_path / 'Get Started readme.md')
 
     # and finally save out the zip
-    print('  - Building menpo_playground.zip...')
-    shutil.make_archive('menpo_playground', 'zip', str(bundle_toolbox_path), '.')
+    print('  - Building {}.zip...'.format(PLAYGROUND_NAME))
+    shutil.make_archive(PLAYGROUND_NAME, 'zip', str(bundle_toolbox_path), '.')
 
 
 UNBUNDLE_START_STRING = '''
