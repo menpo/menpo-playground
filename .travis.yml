@@ -4,7 +4,7 @@ git:
   depth: 200
 
 script:
-- ./build.sh
+- travis_wait 40 ./build.sh
 
 after_success:
 - ls -ahl
@@ -22,4 +22,3 @@ notifications:
     on_success: :change
     on_failure: :change
   email: false
-
