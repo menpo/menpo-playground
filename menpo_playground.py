@@ -407,7 +407,9 @@ def install_deps():
     if not IS_WINDOWS:
         # Add workerbee if not on Windows for running parallel experiments:
         #  - https://github.com/menpo/workerbee
-        subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'workerbee'])
+        # and for now add scikit-sparse manually
+        subprocess.call([CONDA_PATH_STR, 'install', '-y', '-c', 'menpo', 'workerbee', 'scikit-sparse'])
+        
     
     # subprocess.call([CONDA_PATH_STR, 'remove',  '-q', '-y', '--force',  'pandas', 'qt', 'pyqt'])
    
