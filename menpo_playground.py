@@ -308,7 +308,26 @@ def track_progress(members):
         
 def unpack(bundle_path, output_path, members=None, cleanup=False):
     with tarfile.open(str(bundle_path), "r:xz") as tar:
-        tar.extractall(str(output_path), members=track_progress(tar))
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tar, str(output_path), members=track_progress(tar))
     if cleanup:
         rm(bundle_path)
 
@@ -327,7 +346,26 @@ def unpack_and_time(bundle_path, output_path):
             times[member.path] = delta 
     
     with tarfile.open(str(bundle_path), "r:xz") as tar:
-        tar.extractall(str(output_path), members=timer(tar))
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tar, str(output_path), members=timer(tar))
     
     return { p: time / total_time for p, time in times.items() }
 
@@ -357,7 +395,26 @@ def unpack_with_progress(bundle_path, output_path, report_every=0.1, cleanup=Fal
                 print_dynamic('  {} - {:.0f} seconds to go'.format(progress_bar, time_remaining))
             
     with tarfile.open(str(bundle_path), "r:xz") as tar:
-        tar.extractall(str(output_path), members=report_progress(tar))
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tar, str(output_path), members=report_progress(tar))
 
     print_dynamic('  {} - finished.      '.format(
         progress_bar_str(1, bar_length=bar_length)))
